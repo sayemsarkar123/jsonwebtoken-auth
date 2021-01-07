@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 module.exports.intializeMongoDB = function () {
-  const uri = 'mongodb://localhost:27017/test';
+  const uri = process.env.URI;
 
   const options = {
     useNewUrlParser: true,

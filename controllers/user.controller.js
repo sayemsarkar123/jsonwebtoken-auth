@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 module.exports.isAuthenticated = async function (req, res, next) {
   try {
-    const verified = await jwt.verify(req.headers.token, 'secret');
+    const verified = await jwt.verify(req.headers.token, process.env.JWT_SECRET);
     next();
   } catch (e) {
     console.error(e);
@@ -30,7 +30,7 @@ module.exports.login = async function (req, res, next) {
     if (!matchPassword) return res.status(200).json({ error: false, data: null, token: null, message: 'Password didn\'t match' });
     const userObj = JSON.parse(JSON.stringify(user));
     delete userObj.password;
-    const token = await jwt.sign({ data: userObj }, 'secret', { expiresIn: '24hr' });
+    const token = await jwt.sign({ data: userObj }, process.env.JWT_SECRET, { expiresIn: '24hr' });
     return res.status(200).json({ error: false, data: null, token, message: 'Login Success!' });
   } catch (e) {
     console.error(e);
@@ -61,7 +61,7 @@ module.exports.register = async function (req, res, next) {
     const user = await userService.createUser(body);
     const userObj = JSON.parse(JSON.stringify(user));
     delete userObj.password;
-    const token = await jwt.sign({ data: userObj }, 'secret', { expiresIn: '24hr' });
+    const token = await jwt.sign({ data: userObj }, process.env.JWT_SECRET, { expiresIn: '24hr' });
     return res.status(200).json({ error: false, data: null, token, message: 'Register successfully. please login...!' });
   } catch (e) {
     console.error(e);
